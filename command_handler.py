@@ -3,7 +3,7 @@ import time
 from machine import Pin
 
 import dht
-import fonts.bitmap.vga1_16x32 as font
+import fonts.vector.romant as font_g
 import st7789
 from crypto_price import get_crypto_price
 from time_utils import starting_time, set_time_periodically
@@ -27,6 +27,7 @@ def running_command(sc:st7789.ST7789):
     if not isPic and not isCrypto:
       picture(sc)
     elif(isCrypto):
+      sc.fill(st7789.BLACK)
       measured(sc)
 
   if button_down.value() == 0:
@@ -36,6 +37,7 @@ def running_command(sc:st7789.ST7789):
       sc.fill(st7789.BLACK)
       measured(sc)
     else:
+      sc.fill(st7789.BLACK)
       crypto(sc)
   set_time_periodically()
 
@@ -57,8 +59,8 @@ def dht_sensor_read(sc:st7789.ST7789):
   # print(str(dht_sensor.temperature()) + " & " + str(dht_sensor.humidity()))
   TMP = f"T: {str(dht_sensor.temperature())}`C     "
   HUM = f"H: {str(dht_sensor.humidity())}%       "
-  sc.text(font,TMP , 0, 40, st7789.RED)
-  sc.text(font, HUM, 0, 80, st7789.BLUE)
+  sc.draw(font_g,TMP , 0, 60, st7789.RED)
+  sc.draw(font_g, HUM, 0, 100, st7789.BLUE)
 
 def picture(screen: st7789.ST7789):
   global isPic
@@ -73,6 +75,6 @@ def crypto(sc:st7789.ST7789):
   btc = f"Btc: {price["bitcoin"]["usd"]}$ "
   eth = f"Eth: {price["ethereum"]["usd"]}$"
   xpr = f"Xpr: {price["ripple"]["usd"]}$  "
-  sc.text(font, btc, 0, 0, st7789.MAGENTA)
-  sc.text(font, eth, 0, 40, st7789.CYAN)
-  sc.text(font, xpr, 0, 80, st7789.YELLOW)
+  sc.draw(font_g, btc, 0, 20, st7789.MAGENTA)
+  sc.draw(font_g, eth, 0, 60, st7789.CYAN)
+  sc.draw(font_g, xpr, 0, 100, st7789.YELLOW)
