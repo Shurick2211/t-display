@@ -6,7 +6,7 @@ import dht
 import fonts.bitmap.vga1_16x32 as font
 import st7789
 from crypto_price import get_crypto_price
-from time_utils import starting_time
+from time_utils import starting_time, set_time_periodically
 from tdisplay_esp32.tft_buttons import Buttons
 
 TMP = ""
@@ -37,6 +37,7 @@ def running_command(sc:st7789.ST7789):
       measured(sc)
     else:
       crypto(sc)
+  set_time_periodically()
 
 def measured(sc:st7789.ST7789):
   global isCrypto
@@ -71,5 +72,5 @@ def crypto(sc:st7789.ST7789):
   price = get_crypto_price()
   btc = f"B: {price["bitcoin"]["usd"]}$"
   eth = f"E: {price["ethereum"]["usd"]}$"
-  sc.text(font, btc, 0, 40, st7789.RED)
-  sc.text(font, eth, 0, 80, st7789.BLUE)
+  sc.text(font, btc, 0, 40, st7789.MAGENTA)
+  sc.text(font, eth, 0, 80, st7789.CYAN)
