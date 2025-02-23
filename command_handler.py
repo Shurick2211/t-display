@@ -55,8 +55,8 @@ def dht_sensor_read(sc:st7789.ST7789):
   dht_sensor = dht.DHT22(Pin(25, Pin.IN))
   dht_sensor.measure()
   # print(str(dht_sensor.temperature()) + " & " + str(dht_sensor.humidity()))
-  TMP = f"T: {str(dht_sensor.temperature())}`C   "
-  HUM = f"H: {str(dht_sensor.humidity())}%    "
+  TMP = f"T: {str(dht_sensor.temperature())}`C     "
+  HUM = f"H: {str(dht_sensor.humidity())}%       "
   sc.text(font,TMP , 0, 40, st7789.RED)
   sc.text(font, HUM, 0, 80, st7789.BLUE)
 
@@ -70,9 +70,9 @@ def crypto(sc:st7789.ST7789):
   global isCrypto
   isCrypto = True
   price = get_crypto_price()
-  btc = f"B: {price["bitcoin"]["usd"]}$   "
-  eth = f"E: {price["ethereum"]["usd"]}$  "
-  xpr = f"E: {price["ripple"]["usd"]}$    "
+  btc = f"Btc: {price["bitcoin"]["usd"]}$ "
+  eth = f"Eth: {price["ethereum"]["usd"]}$"
+  xpr = f"Xpr: {price["ripple"]["usd"]}$  "
   sc.text(font, btc, 0, 0, st7789.MAGENTA)
   sc.text(font, eth, 0, 40, st7789.CYAN)
   sc.text(font, xpr, 0, 80, st7789.YELLOW)
