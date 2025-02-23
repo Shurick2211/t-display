@@ -1,4 +1,5 @@
 import time
+from time import sleep
 
 import ntptime
 import fonts.bitmap.vga1_16x32 as font
@@ -24,6 +25,7 @@ def set_time_periodically():
 
   if current_time and current_time[3] % 4 == 0 and current_time[4] == 0 and current_time[5] == 0:
     set_time()
+    sleep(1)
 
 
 def get_current_time():
