@@ -2,7 +2,7 @@ import gc
 import time
 
 import st7789
-from command_handler import running_command, picture
+from command_handler import running_command, picture, measured
 from tdisplay_esp32.tft_config import config
 from wifi_connection import connect_wifi
 
@@ -24,7 +24,7 @@ def start():
     screen.rotation(1)
     screen.fill(st7789.BLACK)
     gc.collect()
-
+    measured(screen)
     loop(screen)
 
 
