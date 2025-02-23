@@ -3,6 +3,7 @@ import time
 from machine import Pin
 
 import dht
+import fonts.bitmap.vga1_16x32 as font
 import fonts.vector.romant as font_g
 import st7789
 from crypto_price import get_crypto_price
@@ -59,6 +60,7 @@ def dht_sensor_read(sc:st7789.ST7789):
   # print(str(dht_sensor.temperature()) + " & " + str(dht_sensor.humidity()))
   TMP = f"T: {str(dht_sensor.temperature())}`C     "
   HUM = f"H: {str(dht_sensor.humidity())}%       "
+  sc.fill_rect(35,40, 78, 80, st7789.BLACK)
   sc.draw(font_g,TMP , 0, 60, st7789.RED)
   sc.draw(font_g, HUM, 0, 100, st7789.BLUE)
 
