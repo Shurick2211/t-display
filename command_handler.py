@@ -70,7 +70,9 @@ def crypto(sc:st7789.ST7789):
   global isCrypto
   isCrypto = True
   price = get_crypto_price()
-  btc = f"B: {price["bitcoin"]["usd"]}$"
-  eth = f"E: {price["ethereum"]["usd"]}$"
-  sc.text(font, btc, 0, 40, st7789.MAGENTA)
-  sc.text(font, eth, 0, 80, st7789.CYAN)
+  btc = f"B: {price["bitcoin"]["usd"]}$   "
+  eth = f"E: {price["ethereum"]["usd"]}$  "
+  xpr = f"E: {price["ripple"]["usd"]}$    "
+  sc.text(font, btc, 0, 0, st7789.MAGENTA)
+  sc.text(font, eth, 0, 40, st7789.CYAN)
+  sc.text(font, xpr, 0, 80, st7789.YELLOW)
