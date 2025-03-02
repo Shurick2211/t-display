@@ -1,23 +1,22 @@
 import gc
 import time
-from machine import Pin
 
-import dht
-import fonts.bitmap.vga1_16x32 as font
 import fonts.vector.romant as font_g
+
+import sensor
 import st7789
 from crypto_price import get_crypto_price
-from time_utils import starting_time, set_time_periodically
+from my_server import server_handler
 from tdisplay_esp32.tft_buttons import Buttons
+from time_utils import starting_time, set_time_periodically
 
-TMP = ""
-HUM = ""
+
 button_up = Buttons().right
 button_down = Buttons().left
 isPic = False
 isCrypto = False
 
-def running_command(sc:st7789.ST7789):
+def running_command(sc:st7789.ST7789, wlan):
   cur_seconds = time.time()
   global isPic
   global isCrypto
@@ -41,6 +40,7 @@ def running_command(sc:st7789.ST7789):
       sc.fill(st7789.BLACK)
       crypto(sc)
   set_time_periodically()
+  server_handler()
 
 def measured(sc:st7789.ST7789):
   global isCrypto
@@ -49,17 +49,11 @@ def measured(sc:st7789.ST7789):
   isPic = False
   gc.collect()
   starting_time(sc)
-  dht_sensor_read(sc)
+  dht_read(sc)
 
 
-def dht_sensor_read(sc:st7789.ST7789):
-  global TMP
-  global HUM
-  dht_sensor = dht.DHT22(Pin(25, Pin.IN))
-  dht_sensor.measure()
-  # print(str(dht_sensor.temperature()) + " & " + str(dht_sensor.humidity()))
-  TMP = f"T: {str(dht_sensor.temperature())}`C     "
-  HUM = f"H: {str(dht_sensor.humidity())}%       "
+def dht_read(sc:st7789.ST7789):
+  TMP, HUM = sensor.dht_sensor_read()
   sc.fill_rect(35,40, 78, 80, st7789.BLACK)
   sc.draw(font_g,TMP , 0, 60, st7789.RED)
   sc.draw(font_g, HUM, 0, 100, st7789.BLUE)

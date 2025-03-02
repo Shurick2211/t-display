@@ -2,15 +2,17 @@
 import network
 import time
 import ntptime
+import ujson
 
+networks = None
 
-
-def connect_wifi(wifi_ssid="___", wifi_password="___"):
+def connect_wifi(wifi_ssid="___", wifi_password="____"):
+  global networks
   wlan = network.WLAN(network.STA_IF)
   wlan.active(True)
   time.sleep(1)
-  result = wlan.scan()
-  print(result)
+  networks = wlan.scan()
+  print(networks)
   print("Try to connect to Wi-Fi...")
   try:
     wlan.connect(wifi_ssid, wifi_password)
@@ -33,17 +35,36 @@ def connect_wifi(wifi_ssid="___", wifi_password="___"):
     return None
 
 
-# def create_ap(start_host="192.168.5.1", ssid="ESP32_AP", password="12345678"):
-#     ap = network.WLAN(network.AP_IF)
-#     ap.active(True)
-#     ap.config(essid=ssid, password=password, authmode=network.AUTH_WPA_WPA2_PSK)
-#     ap.ifconfig((start_host, "255.255.255.0", start_host, "8.8.8.8"))
-#     return ap
-#
-#
-# def create_wifi(wan_ssid="HSnet", wan_password="ytdktpfqe,mtn"):
-#     wlan_in = connect_wifi(wifi_ssid=wan_ssid, wifi_password=wan_password)
-#     ap = create_ap()
-#  #   _thread.start_new_thread(forward_packets, (wlan_in, ap))
-#     return wlan_in, ap
+def create_ap(start_host="192.168.5.1", get_way = "192.168.5.1",ssid="ESP32_AP", password="12345678"):
+    ap = network.WLAN(network.AP_IF)
+    ap.active(True)
+    ap.config(essid=ssid, password=password, authmode=network.AUTH_WPA_WPA2_PSK)
+    ap.ifconfig((start_host, "255.255.255.0", get_way, "8.8.8.8"))
+    return ap
 
+
+def rssi_to_signal_level(rssi):
+  if rssi >= -50:
+    return '|||||'
+  elif rssi >= -60:
+    return '||||'
+  elif rssi >= -70:
+    return '|||'
+  elif rssi >= -80:
+    return '||'
+  else:
+    return '|'
+
+def scan_wifi():
+  global networks
+  result = {
+    "message": [
+      {
+        "ssid": net[0].decode(),  # SSID (Network Name)
+        "signal": rssi_to_signal_level(net[3]),  # Signal strength
+      }
+      for net in networks
+    ]
+  }
+
+  return ujson.dumps(result)

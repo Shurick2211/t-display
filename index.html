@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Simple Web</title>
+</head>
+<body>
+  <h1 id="title">Hello world by Index html</h1>
+
+  <p>
+    <button onclick="wifi('/wifi', 'm_wifi')">Get wifi</button>
+    <div id="m_wifi"></div>
+  </p>
+
+  <p>
+    <button onclick="send('/about?pass=password&login=iam', 'message')">About</button>
+    <div id="message"></div>
+  </p>
+  <p>
+    <button onclick="send('/hello', 'm_hello')">Hello</button>
+    <div id="m_hello"></div>
+  </p>
+  <p>
+    <button onclick="send_time('/time', 'm_time')">Time</button>
+    <div id="m_time"></div>
+  </p>
+    <p>
+        Введите имя: <br />
+        <input name="username" id="username" />
+        <button onclick="send_name()">Send</button>
+    </p>
+</body>
+<script>
+    async function send_name(){
+          const username = document.getElementById("username").value;
+          const response = await fetch("/name?name=" + username, {
+                  method: "GET",
+                  headers: { "Accept": "application/json", "Content-Type": "application/json" },
+              });
+              if (response.ok) {
+                  const data = await response.json();
+                  document.getElementById("title").textContent = "Hello, " + data.message + "! In ESP-32!";
+              }
+              else
+                  console.log(response);
+      }
+
+
+  async function send(path, id){
+
+          const response = await fetch(path, {
+                  method: "GET",
+                  headers: { "Accept": "application/json", "Content-Type": "application/json" },
+              });
+              if (response.ok) {
+                  const data = await response.json();
+                  document.getElementById(id).textContent = data.message;
+              }
+              else
+                  console.log(response);
+      }
+
+   async function wifi(path, id){
+          const response = await fetch(path, {
+                  method: "GET",
+                  headers: { "Accept": "application/json", "Content-Type": "application/json" },
+              });
+
+          if (response.ok) {
+              const data = await response.json();
+              const container = document.getElementById(id);
+              container.innerHTML = "";
+              if (Array.isArray(data.message)) {
+                  data.message.forEach((item, index) => {
+                      const div = document.createElement("div");
+
+
+                      div.textContent = `name: ${item.ssid}, s=${item.signal}`;
+                      div.id = `w-${index}`;
+                      container.appendChild(div);
+                  });
+              } else {
+                  container.textContent = "Invalid data format"; // Handle unexpected data
+              }
+          } else {
+              console.log(response);
+          }
+      }
+</script>
+</html>
