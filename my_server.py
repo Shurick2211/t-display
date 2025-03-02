@@ -1,6 +1,5 @@
-
+import sensor
 from server import Server
-from time_utils import get_current_time
 from wifi_connection import scan_wifi
 
 my_server = Server()
@@ -19,7 +18,8 @@ def about():
 
 @my_server.get("/time", app_type="application/json")
 def time_get():
-  return "{\"message\":\"Now - " + get_current_time() + "\"}"
+  TMP, HUM = sensor.dht_sensor_read()
+  return "{\"message\":\"" + TMP + HUM + "\"}"
 
 
 @my_server.get("/")
