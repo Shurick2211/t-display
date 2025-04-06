@@ -6,7 +6,6 @@ import fonts.vector.scripts as font_g
 
 import st7789
 from command_handler import running_command, measured
-from my_ble import BLEUART
 from tdisplay_esp32.tft_config import config
 from wifi_connection import connect_wifi, create_ap
 
@@ -40,7 +39,6 @@ def start():
     measured(screen)
     sleep(1)
 
-    ble_uart = BLEUART("MyESP32")
     print(f"Free mem = {gc.mem_free()}")
     loop(screen)
 

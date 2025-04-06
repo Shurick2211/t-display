@@ -9,6 +9,7 @@ import fonts.bitmap.vga1_16x32 as font
 import sensor
 import st7789
 from crypto_price import get_crypto_price
+from my_ble import BLEUART
 from sensor import move_sensor_read
 from tdisplay_esp32.tft_buttons import Buttons
 from time_utils import set_time_periodically, get_current_time
@@ -18,6 +19,7 @@ button_down = Buttons().left
 isPic = False
 isCrypto = False
 move_counter = 0
+ble_uart = BLEUART("MyESP32")
 
 def running_command(sc:st7789.ST7789, wlan):
   global isPic
@@ -71,9 +73,11 @@ def measured(sc:st7789.ST7789, after_switch = False):
 
   def __display():
     sc.text(font, get_current_time(), 0, 0, st7789.GREEN)
-    dht_read(sc)
+    thp = dht_read(sc)
     sleep(1)
     after_switch = False
+    ble_uart.send(str(thp))
+
 
   if cur_seconds % 10 == 0:
     __display()
@@ -90,6 +94,7 @@ def dht_read(sc: st7789.ST7789):
   sc.draw(font_g, HUM, 0, 82, st7789.BLUE)
   sc.fill_rect(43, 101, 105, 25, st7789.BLACK)
   sc.draw(font_g, P, 0, 115, st7789.YELLOW)
+  return TMP, HUM, P
 
 def picture(screen: st7789.ST7789):
   global isPic

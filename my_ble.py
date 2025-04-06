@@ -42,6 +42,10 @@ _PASSKEY_ACTION_INPUT = const(2)
 _PASSKEY_ACTION_DISPLAY = const(3)
 _PASSKEY_ACTION_NUMERIC_COMPARISON = const(4)
 
+_FLAG_READ = const(0x0002)
+_FLAG_WRITE = const(0x0008)
+_FLAG_NOTIFY = const(0x0010)
+
 class BLEUART:
     def __init__(self, name="ESP32-UART"):
         self.name = name
@@ -192,9 +196,9 @@ class BLEUART:
     def _register_services(self):
         UART_UUID = ubluetooth.UUID('6E400001-B5A3-F393-E0A9-E50E24DCCA9E')
         UART_TX = (ubluetooth.UUID('6E400003-B5A3-F393-E0A9-E50E24DCCA9E'),
-                   ubluetooth.FLAG_READ | ubluetooth.FLAG_NOTIFY,)
+                    _FLAG_NOTIFY,)
         UART_RX = (ubluetooth.UUID('6E400002-B5A3-F393-E0A9-E50E24DCCA9E'),
-                   ubluetooth.FLAG_WRITE,)
+                   _FLAG_WRITE,)
         UART_SERVICE = (UART_UUID, (UART_TX, UART_RX,),)
         SERVICES = (UART_SERVICE,)
         ((self.tx, self.rx,),) = self.ble.gatts_register_services(SERVICES)
