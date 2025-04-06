@@ -1,14 +1,10 @@
 import time
 from time import sleep
-
 import ntptime
-import fonts.bitmap.vga1_16x32 as font
-import st7789
 
 TZ_OFFSET = 2 * 3600
 
 current_time = None
-
 
 def set_time():
   try:
@@ -32,13 +28,9 @@ def get_current_time():
   global current_time
   try:
     current_time = time.localtime(time.time() + TZ_OFFSET)
+    formated_date = "{:02}/{:02}/{:02}".format(current_time[2], current_time[1], current_time[0]%100)
     formatted_time = "{:02}:{:02}".format(current_time[3], current_time[4])
-    return "Time: " + str(formatted_time)
+    return str(formated_date) + " "+ str(formatted_time)
   except Exception as e:
     print(f"Time error: {str(e)}")
-    return None
-
-
-def starting_time(sc: st7789.ST7789):
-  sc.text(font, get_current_time(), 0, 0, st7789.GREEN)
-  # print(get_current_time())
+    return "..:.."

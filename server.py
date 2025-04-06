@@ -1,6 +1,8 @@
 import socket
 import _thread
 
+from wifi_connection import create_ap
+
 
 class Server:
   HOST = "0.0.0.0"
@@ -57,23 +59,21 @@ class Server:
       else:
           return "HTTP/1.1 404 Not Found\nContent-Type: application/json\n\n{\"Error\":\"404 Not Found\"}"
 
-  def init_socket(self):
+  def start_server(self):
+    # Create a socket
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind((self.__host, self.__port))
-    server_socket.listen(2)  # Listen for incoming connections
-    return server_socket
+    server_socket.listen(5)  # Listen for incoming connections
 
-  def handle_client(self, server_socket):
-    client_socket, addr = server_socket.accept()  # Accept a connection
-    print(f"Connected by {addr}")
-    request = client_socket.recv(1024).decode()  # Receive request
-    print(f"Request:\n{request}")
-    client_socket.sendall(
-      self.__handle_request(request).encode())  # Send response
-    client_socket.close()  # Close connection
-
-  def start_server(self):
-    server_socket = self.init_socket()
     print(f"Server running on {self.__host}:{self.__port}...")
+
     while True:
-      self.handle_client(server_socket)
+      client_socket, addr = server_socket.accept()  # Accept a connection
+      print(f"Connected by {addr}")
+
+      request = client_socket.recv(1024).decode()  # Receive request
+      print(f"Request:\n{request}")
+
+      client_socket.sendall(self.__handle_request(request).encode())  # Send response
+
+      client_socket.close()  # Close connection

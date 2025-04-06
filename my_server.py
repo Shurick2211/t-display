@@ -1,10 +1,9 @@
+
 import sensor
 from server import Server
 from wifi_connection import scan_wifi
 
 my_server = Server()
-server_socket = my_server.init_socket()
-
 
 @my_server.get("/hello", app_type="application/json")
 def hello():
@@ -43,5 +42,6 @@ def hello_wifi():
   return scan_wifi()
 
 
-def server_handler():
-  my_server.handle_client(server_socket)
+def my_server_start():
+  my_server.async_start_server()
+
